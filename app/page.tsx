@@ -83,7 +83,7 @@ function Login({onLogin}:{onLogin:()=>void}){
   }
 
   const { error } = await sb.auth.resetPasswordForEmail(email, {
-    redirectTo: ${window.location.origin}/reset-password
+    redirectTo: window.location.origin + "/reset-password"
   });
 
   if(error){
