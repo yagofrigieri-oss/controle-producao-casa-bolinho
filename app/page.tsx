@@ -76,12 +76,35 @@ export default function Home(){
 function Login({onLogin}:{onLogin:()=>void}){
   const [email,setEmail]=useState(""); const [password,setPassword]=useState(""); const [err,setErr]=useState(""); const [busy,setBusy]=useState(false);
   async function go(e:any){e.preventDefault();setBusy(true);setErr("");const {error}=await sb.auth.signInWithPassword({email,password});if(error)setErr("E-mail ou senha inválidos.");else onLogin();setBusy(false)}
+  async function resetPassword(){
+  if(!email){
+    setErr("Digite seu e-mail primeiro.");
+    return;
+  }
+
+  const { error } = await sb.auth.resetPasswordForEmail(email, {
+    redirectTo: ${window.location.origin}/reset-password
+  });
+
+  if(error){
+    setErr("Não foi possível enviar o e-mail de recuperação.");
+  } else {
+    setErr("E-mail de recuperação enviado. Verifique sua caixa de entrada.");
+  }
+}
   return <div className="login"><div className="loginbox">
     <h1>Controle de Produção</h1><p className="muted">Casa do Bolinho de Frango</p>
     <form className="form" onSubmit={go}>
       <div className="field"><label>E-mail</label><input type="email" value={email} onChange={e=>setEmail(e.target.value)} required /></div>
       <div className="field"><label>Senha</label><input type="password" value={password} onChange={e=>setPassword(e.target.value)} required /></div>
       {err&&<div className="error">{err}</div>}<button className="btn primary" disabled={busy}>{busy?"Entrando...":"Entrar"}</button>
+   <button
+  type="button"
+  className="btn"
+  onClick={resetPassword}
+>
+  Esqueci minha senha
+</button>
     </form>
   </div></div>
 }
